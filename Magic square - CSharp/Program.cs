@@ -13,35 +13,35 @@ namespace magic2
     class Program
     {
         static Thread[] shaker = {
-        new Thread(new ThreadStart(watch1)),
-         new Thread(new ThreadStart(watch2)),
-         new Thread(new ThreadStart(watch3)),
-         new Thread(new ThreadStart(watch4)),
-          new Thread(new ThreadStart(watch5)),
-          new Thread(new ThreadStart(watch6))};
+            new(new ParameterizedThreadStart(Watch!)),
+            new(new ParameterizedThreadStart(Watch!)),
+            new(new ParameterizedThreadStart(Watch!)),
+            new(new ParameterizedThreadStart(Watch!)),
+            new(new ParameterizedThreadStart(Watch!)),
+            new(new ParameterizedThreadStart(Watch!))
+        };
 
-        static List<Node> squares;
+        static List<Node> squares = [];
         static int size;
         static int chance = 0;
-        static Random gen = new Random();
+        static readonly Random gen = new();
         static bool found = false;
         static bool NeedShake = false;
         static int delay = 800;
 
 
-        static void Main(string[] args)
+        static void Main()
         {
-            Stopwatch stopwatch = new Stopwatch();
+            Stopwatch stopwatch = new();
             stopwatch.Start();
-            squares = new List<Node>();
             size = Convert.ToInt32(Console.ReadLine());
             delay = (100000) * (size * size / 5);
 
-            fill(2);
+            Fill(2);
 
             int limit = 190 + 10 * size * size, dif = size * size / 2 + 5 * size;
             //  filter(50, 2000);
-            foreach (Thread t in shaker) t.Start();
+            foreach (Thread t in shaker) t.Start(gen.Next(10));
 
             while (!found)
             {
@@ -65,8 +65,8 @@ namespace magic2
                 }
 
             }
-            squares = new List<Node>();
-            foreach (Thread t in shaker) t.Abort();
+            squares = [];
+            foreach (Thread t in shaker) t.Interrupt();
             stopwatch.Stop();
             Console.WriteLine($"Time taken: {stopwatch.Elapsed.TotalSeconds}");
             Console.Read();
@@ -108,7 +108,7 @@ namespace magic2
         }
 
 
-        static void fill(int count)
+        static void Fill(int count)
         {
             int[] buffer;
             int temp;
@@ -159,7 +159,7 @@ namespace magic2
 
 
 
-        static void shake(int span)
+        static void Shake(int span)
         {
             int n;
 
@@ -172,10 +172,10 @@ namespace magic2
             }
         }
 
-        static void watch(object obj)
+        static void Watch(object obj)
         {
             int delayShift = (int)obj;
-            shake(delayShift);
+            Shake(delayShift);
         }
 
         static public uint CPUSpeed()
